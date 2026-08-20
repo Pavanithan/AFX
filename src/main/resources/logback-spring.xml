@@ -1,0 +1,22 @@
+<configuration>
+    <!--
+        JSON structured logging via MDC. Code sets tenantId/campaignId/notificationId/
+        retryCount/status into the MDC (see LoggingContext) before logging; the encoder
+        below serializes whatever is in the MDC as top-level JSON fields automatically.
+        PII masking happens at the call site (see CONCEPT_NOTES.md - "Data masking"),
+        not here, because the encoder has no idea which fields are sensitive.
+    -->
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder class="net.logstash.logback.encoder.LogstashEncoder">
+            <includeMdcKeyName>tenantId</includeMdcKeyName>
+            <includeMdcKeyName>campaignId</includeMdcKeyName>
+            <includeMdcKeyName>notificationId</includeMdcKeyName>
+            <includeMdcKeyName>retryCount</includeMdcKeyName>
+            <includeMdcKeyName>correlationId</includeMdcKeyName>
+        </encoder>
+    </appender>
+
+    <root level="INFO">
+        <appender-ref ref="STDOUT"/>
+    </root>
+</configuration>

@@ -1,0 +1,49 @@
+spring:
+  application:
+    name: campaign-platform
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/campaign_platform
+    username: campaign
+    password: campaign
+
+  jpa:
+    hibernate:
+      ddl-auto: validate # schema is owned by Flyway, never by Hibernate
+    open-in-view: false
+    properties:
+      hibernate:
+        jdbc:
+          batch_size: 50
+
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+
+  data:
+    redis:
+      host: localhost
+      port: 6379
+
+server:
+  port: 8080
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,prometheus
+
+# Simulated provider behaviour (Part 3 spec): 50-200ms latency, 15-25% failure, 100 req/min/channel.
+provider:
+  simulation:
+    min-latency-ms: 50
+    max-latency-ms: 200
+    failure-rate: 0.20
+  rate-limit:
+    requests-per-minute: 100
+
+logging:
+  level:
+    root: INFO
+    com.appfuxion: DEBUG
